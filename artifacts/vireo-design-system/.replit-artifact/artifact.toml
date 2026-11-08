@@ -1,0 +1,19 @@
+kind = "design-system"
+previewPath = "/vireo-design-system/"
+title = "Vireo Design System"
+description = "A shared visual system for Vireo’s procurement workspace and client-facing surfaces, based on the current Vireo website palette, typography, and components."
+version = "1.0.0"
+id = "artifacts/vireo-design-system"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/vireo-design-system/" ]
+localPort = 25884
+
+[services.development]
+run = "pnpm --filter @workspace/vireo-design-system run dev"
+
+[services.env]
+PORT = "25884"
+BASE_PATH = "/vireo-design-system/"

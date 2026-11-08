@@ -1,0 +1,327 @@
+body[data-chime-blocker-open="true"] [data-radix-dialog-overlay] {
+  background-color: hsl(var(--background) / 0.76) !important;
+  backdrop-filter: blur(7px);
+}
+
+.chime-blocker-dialog {
+  display: grid;
+  gap: 22px;
+  width: min(94vw, 680px);
+  max-height: min(90dvh, 760px);
+  overflow-y: auto;
+  border-color: hsl(var(--border));
+  border-radius: 24px;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  padding: clamp(20px, 4vw, 36px);
+  box-shadow: 0 28px 90px hsl(var(--foreground) / 0.32);
+}
+
+.chime-blocker-dialog__content {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 4vw, 34px);
+}
+
+.chime-blocker-dialog__orb {
+  position: relative;
+  width: clamp(140px, 27vw, 220px);
+  aspect-ratio: 1;
+  justify-self: center;
+  animation: chime-blocker-wiggle 1.7s ease-in-out infinite;
+}
+
+.chime-blocker-dialog__orb--review {
+  animation-name: chime-review-bounce;
+}
+
+.chime-blocker-dialog__orb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.chime-blocker-dialog__eyes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.chime-blocker-dialog__eyes i {
+  position: absolute;
+  top: 48%;
+  width: 4.2%;
+  height: 4.2%;
+  border-radius: 50%;
+  background: rgb(248 232 202);
+  transform: scaleY(0);
+  transform-origin: center;
+}
+
+.chime-blocker-dialog__eyes i::after {
+  position: absolute;
+  right: 12%;
+  bottom: 22%;
+  left: 12%;
+  height: 12%;
+  border-radius: 50%;
+  background: rgb(71 46 45);
+  content: '';
+  opacity: 0;
+}
+
+.chime-blocker-dialog__eyes i:first-child { left: 47.5%; }
+.chime-blocker-dialog__eyes i:last-child { top: 47%; left: 58.7%; }
+
+.chime-blocker-dialog__eyes--alert i {
+  animation: chime-blocker-blink 2.8s ease-in-out infinite;
+}
+
+.chime-blocker-dialog__eyes--alert i::after {
+  animation: chime-blocker-lid 2.8s ease-in-out infinite;
+}
+
+.chime-blocker-dialog__header {
+  gap: 10px;
+}
+
+.chime-blocker-dialog__eyebrow {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.chime-blocker-dialog__header h2 {
+  line-height: 1.2;
+}
+
+.chime-blocker-dialog__header [data-radix-dialog-description] {
+  color: hsl(var(--foreground));
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.chime-blocker-dialog__guidance {
+  display: grid;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.chime-blocker-dialog__guidance-block {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+  background: hsl(var(--muted) / 0.45);
+}
+
+.chime-blocker-dialog__guidance-block h3,
+.chime-blocker-dialog__guidance-block p {
+  margin: 0;
+}
+
+.chime-blocker-dialog__guidance-block h3 {
+  color: hsl(var(--foreground));
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.chime-blocker-dialog__guidance-block p,
+.chime-blocker-dialog__guidance-block [data-radix-dialog-description] {
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chime-blocker-dialog__hint {
+  margin: 2px 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.chime-blocker-dialog__audit-status {
+  min-height: 18px;
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.chime-audit-dialog {
+  display: grid;
+  gap: 18px;
+  width: min(94vw, 640px);
+  max-height: min(88dvh, 720px);
+  overflow-y: auto;
+  border-color: hsl(var(--border));
+  border-radius: 20px;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  padding: clamp(20px, 4vw, 32px);
+}
+
+.chime-audit-dialog [data-radix-dialog-description] {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
+
+.chime-audit-list {
+  display: grid;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.chime-audit-list > p {
+  margin: 0;
+  padding: 16px;
+  color: hsl(var(--muted-foreground));
+}
+
+.chime-audit-event {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  background: hsl(var(--muted) / 0.45);
+}
+
+.chime-audit-event > div {
+  display: grid;
+  gap: 4px;
+}
+
+.chime-audit-event > div:last-child {
+  text-align: right;
+}
+
+.chime-audit-fields {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.chime-audit-fields > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.35fr) 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.chime-audit-fields dt,
+.chime-audit-fields dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.chime-audit-fields dt {
+  color: hsl(var(--muted-foreground));
+}
+
+.chime-audit-fields dd {
+  color: hsl(var(--foreground));
+}
+
+.chime-audit-fields dd span {
+  text-transform: capitalize;
+}
+
+.chime-audit-event strong {
+  color: hsl(var(--foreground));
+  font-size: 13px;
+}
+
+.chime-audit-event span,
+.chime-audit-event time {
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
+}
+
+@keyframes chime-blocker-wiggle {
+  0%, 100% { transform: rotate(0) translateY(0); }
+  15% { transform: rotate(-8deg) translateY(-3px); }
+  30% { transform: rotate(7deg) translateY(0); }
+  45% { transform: rotate(-5deg) translateY(-2px); }
+  60% { transform: rotate(4deg) translateY(0); }
+  75% { transform: rotate(-2deg) translateY(-1px); }
+}
+
+@keyframes chime-review-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-20px) scale(1.03, 0.97); }
+  50% { transform: translateY(0) scale(0.98, 1.03); }
+  72% { transform: translateY(-8px) scale(1.01, 0.99); }
+}
+
+@keyframes chime-blocker-blink {
+  0%, 78%, 84%, 100% { transform: scaleY(0); }
+  80%, 82%, 86%, 88% { transform: scaleY(1); }
+}
+
+@keyframes chime-blocker-lid {
+  0%, 78%, 84%, 100% { opacity: 0; }
+  80%, 82%, 86%, 88% { opacity: 0.85; }
+}
+
+@media (max-width: 540px) {
+  .chime-blocker-dialog__content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .chime-blocker-dialog__orb {
+    width: clamp(148px, 48vw, 190px);
+  }
+
+  .chime-blocker-dialog__header {
+    align-items: center;
+    text-align: center;
+  }
+
+  .chime-blocker-dialog__guidance {
+    width: 100%;
+    text-align: left;
+  }
+
+  .chime-audit-event {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .chime-audit-event > div:last-child {
+    text-align: left;
+  }
+
+  .chime-audit-fields > div {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .chime-blocker-dialog [data-radix-dialog-close] {
+    right: 12px;
+    top: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chime-blocker-dialog__orb {
+    animation: none;
+  }
+
+  .chime-blocker-dialog__eyes--alert i,
+  .chime-blocker-dialog__eyes--alert i::after {
+    animation-duration: 3.4s;
+  }
+}

@@ -1,0 +1,34 @@
+kind = "web"
+previewPath = "/"
+title = "vireo-step1"
+description = "A Python 3 Flask web app that connects securely to Supabase using Replit Secrets."
+version = "1.0.0"
+id = "artifacts/vireo-step1"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22979
+
+[services.development]
+run = "pnpm --filter @workspace/vireo-step1 run build && python3 ../../main.py"
+
+[services.production]
+
+[services.production.build]
+args = ["pnpm", "--filter", "@workspace/vireo-step1", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = ["python3", "../../main.py"]
+
+[services.production.run.env]
+PORT = "22979"
+NODE_ENV = "production"
+
+[services.env]
+PORT = "22979"
+BASE_PATH = "/"

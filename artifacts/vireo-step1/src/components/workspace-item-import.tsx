@@ -1,0 +1,144 @@
+import { useRef, useState } from "react";
+import { AlertCircle, CheckCircle2, FileSpreadsheet } from "lucide-react";
+import { previewWorkspaceItems, type SpreadsheetPreview, type WorkspaceCatalogItem, type WorkspaceCatalogItemDraft } from "@/lib/vireo-api";
+import { notifyChimeBlocker } from "./ChimeBlockerDialog";
+
+type Field = "item_code" | "item_name" | "usual_qty";
+const labels: Record<Field, string> = { item_code: "Item code (optional)", item_name: "Item name", usual_qty: "Usual quantity" };
+const aliases: Record<Field, string[]> = {
+  item_code: ["item code", "product code", "sku", "catalog code"],
+  item_name: ["item name", "item", "product name", "product", "material", "description"],
+  usual_qty: ["usual quantity", "usual qty", "baseline quantity", "baseline qty", "quantity", "qty", "units"],
+};
+const clean = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+export function WorkspaceItemImport({
+  existing, busy, onImport,
+}: {
+  existing: WorkspaceCatalogItem[];
+  busy: boolean;
+  onImport: (items: WorkspaceCatalogItemDraft[]) => Promise<unknown>;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<SpreadsheetPreview>();
+  const [mapping, setMapping] = useState<Record<Field, string>>({ item_code: "", item_name: "", usual_qty: "" });
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [reading, setReading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const readFile = async (file?: File) => {
+    if (!file) return;
+    setReading(true);
+    setMessage("");
+    try {
+      const result = await previewWorkspaceItems(file);
+      const guessed = Object.fromEntries((Object.keys(labels) as Field[]).map((field) => {
+        const index = result.columns.findIndex((heading) => aliases[field].includes(clean(heading)));
+        return [field, index < 0 ? "" : String(index)];
+      })) as Record<Field, string>;
+      if (!guessed.item_name || !guessed.usual_qty) {
+        throw new Error("Map an item-name column and a usual-quantity column in the file headings.");
+      }
+      setPreview(result);
+      setMapping(guessed);
+      setMessage(`${result.rows.length} row${result.rows.length === 1 ? "" : "s"} ready to review.`);
+      setIsError(false);
+    } catch (error) {
+      setPreview(undefined);
+      const text = error instanceof Error ? error.message : "The file could not be read.";
+      setMessage(text);
+      setIsError(true);
+      notifyChimeBlocker(text);
+    } finally {
+      setReading(false);
+      if (input.current) input.current.value = "";
+    }
+  };
+
+  const mappedRows = (preview?.rows || []).map((row) => ({
+    item_code: mapping.item_code ? row.values[Number(mapping.item_code)]?.trim() || "" : "",
+    item_name: mapping.item_name ? row.values[Number(mapping.item_name)]?.trim() || "" : "",
+    usual_qty: mapping.usual_qty ? Number(row.values[Number(mapping.usual_qty)]?.trim() || "") : Number.NaN,
+  }));
+  const rowErrors = mappedRows.map((row, index) => {
+    if (!row.item_name || !Number.isSafeInteger(row.usual_qty) || row.usual_qty <= 0) return `Row ${preview?.rows[index]?.row_number}: item name and positive whole-number quantity are required.`;
+    if (row.item_code && !/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(row.item_code)) return `Row ${preview?.rows[index]?.row_number}: invalid item code.`;
+    return "";
+  }).filter(Boolean);
+  const importRows = async () => {
+    if (!mappedRows.length || !preview) return;
+    if (rowErrors.length) {
+      setIsError(true);
+      setMessage(rowErrors[0]);
+      notifyChimeBlocker(rowErrors[0]);
+      return;
+    }
+    if (preview.truncated) {
+      setIsError(true);
+      const text = "This file exceeds the 100-row preview limit. Split it into smaller files before importing.";
+      setMessage(text);
+      notifyChimeBlocker(text);
+      return;
+    }
+    const names = new Set(existing.map((item) => item.item_name.trim().toLowerCase()));
+    const codes = new Set(existing.map((item) => item.item_code.trim().toUpperCase()));
+    for (const row of mappedRows) {
+      const name = row.item_name.toLowerCase();
+      const code = row.item_code.toUpperCase();
+      if (names.has(name) || (code && codes.has(code))) {
+        setIsError(true);
+        const text = "A name or item code is already enrolled. Remove duplicates or resolve them with the Admin-Member before importing.";
+        setMessage(text);
+        notifyChimeBlocker(text);
+        return;
+      }
+      names.add(name);
+      if (code) codes.add(code);
+    }
+    setSaving(true);
+    try {
+      await onImport(mappedRows.map((row) => ({
+        item_code: row.item_code || undefined,
+        item_name: row.item_name,
+        usual_qty: row.usual_qty,
+      })));
+      setPreview(undefined);
+      setIsError(false);
+      setMessage("Items enrolled. Any missing codes were generated by Vireo.");
+    } catch (error) {
+      setIsError(true);
+      const text = error instanceof Error ? error.message : "Item enrollment failed. No rows were imported.";
+      setMessage(text);
+      notifyChimeBlocker(text);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return <section className="amw-item-import" aria-labelledby="amw-item-import-title">
+    <div className="amw-panel-heading">
+      <div className="amw-heading-icon"><FileSpreadsheet size={16} aria-hidden="true" /></div>
+      <div><span className="amw-card-label">ITEM CATALOG</span><h3 id="amw-item-import-title">Enroll items from a file</h3></div>
+    </div>
+    <p className="amw-baseline-copy">Upload a selectable-text PDF table, DOCX table, XLSX workbook, or CSV. Scanned PDFs need OCR first. Include item name and usual quantity; item code is optional. Review before saving.</p>
+    <input ref={input} className="field" type="file" accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,text/csv" disabled={reading || saving || busy} onChange={(event) => void readFile(event.currentTarget.files?.[0])} aria-label="Choose item enrollment file" />
+    {message && <p className={isError ? "form-error" : "amw-import-message"} role={isError ? "alert" : "status"}>{isError ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}{message}</p>}
+    {preview && <div className="amw-import-preview">
+      <div className="amw-import-grid">
+        {(Object.keys(labels) as Field[]).map((field) => <label key={field}><span>{labels[field]}</span><select className="field" value={mapping[field]} onChange={(event) => setMapping((current) => ({ ...current, [field]: event.target.value }))}>
+          <option value="">Not provided</option>{preview.columns.map((column, index) => <option key={`${index}-${column}`} value={String(index)}>{column || `Column ${index + 1}`}</option>)}
+        </select></label>)}
+      </div>
+      <div className="amw-import-table" role="table" aria-label="Item rows to enroll">
+        <div role="row" className="amw-import-row amw-import-head"><span>Code</span><span>Item</span><span>Usual qty</span></div>
+        {mappedRows.slice(0, 8).map((row, index) => <div role="row" className="amw-import-row" key={index}><span>{row.item_code || "Generated"}</span><span>{row.item_name || "Missing item name"}</span><span>{Number.isFinite(row.usual_qty) ? row.usual_qty : "Missing"}</span></div>)}
+        {mappedRows.length > 8 && <p className="input-hint">Showing the first 8 of {mappedRows.length} rows. All rows are checked before import.</p>}
+      </div>
+      {rowErrors.length > 0 && <p className="form-error" role="alert">{rowErrors[0]}</p>}
+      <button type="button" className="button button-primary full-width" disabled={reading || saving || busy || !mappedRows.length || !!rowErrors.length} onClick={() => void importRows()}>
+        {saving || busy ? "Enrolling reviewed items…" : `Enroll ${mappedRows.length} reviewed item${mappedRows.length === 1 ? "" : "s"}`}
+      </button>
+    </div>}
+  </section>;
+}

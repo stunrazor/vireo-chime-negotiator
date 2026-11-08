@@ -1,0 +1,111 @@
+.chime-demo-profile {
+  display: block;
+  margin: 0 0 28px;
+  padding: 0;
+}
+
+.chime-demo-profile__identity {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.chime-demo-profile__copy {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.chime-demo-profile__copy .chime-demo-profile__eyebrow,
+.chime-demo-profile__copy h2 {
+  flex-basis: 100%;
+}
+
+.chime-demo-profile__orb {
+  position: relative;
+  display: block;
+  width: 132px;
+  height: 132px;
+  transform-origin: center;
+}
+
+.chime-demo-profile__orb--monitoring {
+  animation: chime-monitor-float 5s ease-in-out infinite;
+}
+
+.chime-demo-profile__orb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.chime-demo-profile__eyes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.chime-demo-profile__eyes i {
+  position: absolute;
+  width: 3.2%;
+  height: 3.7%;
+  border-radius: 50%;
+  background: #fff1d6;
+  transform: scaleY(0);
+  transform-origin: center;
+}
+
+.chime-demo-profile__eyes--blink i {
+  animation: chime-profile-blink 180ms ease-in-out 1;
+}
+
+.chime-demo-profile__eyes i:first-child { top: 48.3%; left: 47.5%; }
+.chime-demo-profile__eyes i:last-child { top: 47%; left: 58.7%; }
+
+.chime-demo-profile__eyebrow {
+  margin: 0 0 4px;
+  color: var(--chime-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chime-demo-profile h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+@keyframes chime-monitor-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-1deg) scale(1); }
+  50% { transform: translate3d(0, -6px, 0) rotate(1.5deg) scale(1.025); }
+}
+
+@keyframes chime-profile-blink {
+  0%, 100% { transform: scaleY(0); }
+  38%, 70% { transform: scaleY(1); }
+}
+
+@media (max-width: 640px) {
+  .chime-demo-profile__identity {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .chime-demo-profile__orb {
+    width: 112px;
+    height: 112px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chime-demo-profile__orb--monitoring,
+  .chime-demo-profile__eyes--blink i {
+    animation: none;
+  }
+  .chime-demo-profile__eyes i { transform: scaleY(0); }
+}

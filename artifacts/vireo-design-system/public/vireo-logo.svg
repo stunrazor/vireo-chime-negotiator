@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="90 70 220 156" width="220" height="156">
+  <title>Vireo icon</title>
+  <path fill="#4F46E5" d="M200 210 Q100 180 110 80 Q195 130 200 210 Z"/>
+  <path fill="#F59E0B" d="M200 210 Q300 180 290 80 Q205 130 200 210 Z"/>
+  <path fill="#FDE68A" opacity="0.92" d="M230 135 Q260 122 273 95 Q248 132 230 168 Z"/>
+  <circle fill="#FFFFFF" cx="200" cy="207" r="9"/>
+</svg>
