@@ -57,6 +57,23 @@ const phaseLabel: Record<Phase, string> = {
   settled: "Settled",
 };
 
+const BUSY_PHASES: Phase[] = ["negotiating", "approving", "authorizing", "capturing"];
+
+function StageStatus({ phase }: { phase: Phase }) {
+  const busy = BUSY_PHASES.includes(phase);
+  return (
+    <span className="font-mono font-semibold text-foreground">
+      {phaseLabel[phase]}
+      {busy && (
+        <>
+          <span aria-hidden="true" className="chime-stage-dots" />
+          <span className="sr-only"> (in progress)</span>
+        </>
+      )}
+    </span>
+  );
+}
+
 export function NegotiatorDemoPage() {
   const [suppliers, setSuppliers] = useState<DemoSupplier[]>([]);
   const [item, setItem] = useState("tablet");
@@ -192,11 +209,17 @@ export function NegotiatorDemoPage() {
             <Badge variant="secondary">AI DIALOGUE + DETERMINISTIC BOUNDS</Badge>
             <Badge variant="secondary">PAYPAL SANDBOX</Badge>
           </div>
-          <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+          <p className="mt-2 max-w-3xl text-base text-foreground">
             A buyer sets the limits. Agents haggle. The buyer pays — settled on
-            PayPal. The human&apos;s Approve click is the payment-initiation event —
-            no approval, no PayPal call. Current stage:{" "}
-            <span className="font-mono font-semibold text-foreground">{phaseLabel[phase]}</span>
+            PayPal.
+          </p>
+          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+            The human&apos;s Approve click is the payment-initiation event — no
+            approval, no PayPal call.
+          </p>
+          <p className="mt-3 flex items-center gap-2 text-sm">
+            <span className="font-semibold text-muted-foreground">Current stage:</span>
+            <StageStatus phase={phase} />
           </p>
         </header>
 
