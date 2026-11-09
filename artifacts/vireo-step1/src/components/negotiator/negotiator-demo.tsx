@@ -219,17 +219,22 @@ export function NegotiatorDemoPage() {
       <div className="mx-auto max-w-5xl px-4 py-8">
         <header className="mb-6">
           <div className="flex items-center gap-3">
-            <img
-              src={`${import.meta.env.BASE_URL}logo.svg`}
-              alt="Vireo"
-              className="h-10 w-auto"
-            />
+            <div className="flex flex-col items-center">
+              <img
+                src={`${import.meta.env.BASE_URL}logo.svg`}
+                alt="Vireo"
+                className="h-12 w-auto"
+              />
+              <span className="mt-1 font-sans text-2xl font-extrabold tracking-tight text-foreground">
+                Vireo
+              </span>
+            </div>
             <p className="text-sm font-semibold text-muted-foreground">
-              Vireo · Smart from Request to Payment
+              Smart from Request to Payment
             </p>
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-2">
-            <h1 className="font-sans text-2xl font-bold">Chime Negotiator</h1>
+            <h1 className="font-sans text-xl font-bold">Chime Negotiator</h1>
             <Badge variant="destructive">DEMO ONLY</Badge>
             <Badge variant="secondary">SYNTHETIC DATA</Badge>
             <Badge variant="secondary">AI DIALOGUE + DETERMINISTIC BOUNDS</Badge>
