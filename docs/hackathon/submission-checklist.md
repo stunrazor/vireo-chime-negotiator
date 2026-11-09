@@ -11,7 +11,7 @@ print (age, location, team size) before clicking submit.
 - Title: `Chime Negotiator — bounded AI procurement settled on PayPal`
 - Tagline: `AI agents haggle inside human-set bounds; humans approve; PayPal Sandbox settles.`
 - Story: paste `docs/hackathon/paypal-devpost-story.md` (7 labeled sections).
-- Repo: `https://github.com/stunrazor/vireo-chime-negotiator` (public, MIT).
+- Repo: `https://github.com/stunrazor/vireo-chime-negotiator` (public, AGPL-3.0).
 - Video: unlisted link, < 3:00, per `docs/hackathon/video-script.md`.
 - Built with: `PayPal Sandbox (Orders API, webhooks), Muse Spark, Express, Supabase, React, Drizzle`.
 - Prize focus: Best Use of Agentic Commerce (primary), Overall, PayPal+AI,
@@ -39,4 +39,4 @@ print (age, location, team size) before clicking submit.
 1. Fresh-clone build passes (Muse runs: clone → install → typecheck → test).
 2. Authorize → capture → settled verified live (needs the Sandbox buyer click).
 3. Video watched once at 1x, < 3:00, no secrets visible.
-4. Story has zero TODOs; repo About shows description + topics + MIT.
+4. Story has zero TODOs; repo About shows description + topics + AGPL-3.0.

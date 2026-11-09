@@ -1,6 +1,6 @@
 # Publish the public slice (repeatable)
 
-Target: https://github.com/stunrazor/vireo-chime-negotiator (public, MIT).
+Target: https://github.com/stunrazor/vireo-chime-negotiator (public, AGPL-3.0).
 Source of truth stays `Vireo/vireo-step1` on branch `hackathon/paypal-negotiator`;
 this procedure rebuilds the public copy idempotently — safe to re-run after
 any change. Never push from `vireo-step1` directly (it holds `.env` + history).

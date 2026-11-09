@@ -9,7 +9,7 @@ that product: agent-to-agent haggling inside human-set bounds, a human Approve
 that initiates payment, and PayPal Sandbox settlement with a webhook ledger.
 
 - Product site: `https://weneedvireo.online`
-- License: MIT (`LICENSE`)
+- License: AGPL-3.0 (`LICENSE`); commercial licensing: `stunrazor@gmail.com`
 
 ## Judges start here
 
@@ -137,4 +137,9 @@ only, synthetic Demo data. Never Main. Submissions close **Nov 12, 2026**.
 
 ## License
 
-MIT — see `LICENSE`.
+This project is licensed under the GNU Affero General Public License v3.0 —
+see `LICENSE`.
+
+**Commercial licensing:** if AGPL-3.0 terms don't fit your use (for example,
+proprietary deployment without source disclosure), contact
+`stunrazor@gmail.com` for a paid commercial license.
