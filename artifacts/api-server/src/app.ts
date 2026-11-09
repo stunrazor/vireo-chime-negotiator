@@ -32,6 +32,15 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Root is public and informational so the bare Render URL shows status
+// instead of an auth error. All demo JSON lives under /api/*.
+app.get("/", (_req, res) => {
+  res.json({
+    service: "vireo-chime-negotiator-api",
+    demo: "open /negotiator-demo on the demo site",
+    health: "/api/healthz",
+  });
+});
 // HACKATHON (paypal-negotiator branch only): the demo endpoints below are
 // public by design — synthetic data, PayPal Sandbox money, staging ledger —
 // so the hackathon demo runs without Clerk accounts. All other paths keep
