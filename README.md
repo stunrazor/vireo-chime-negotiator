@@ -1,6 +1,6 @@
 # Vireo — Chime Negotiator (PayPal AI Hackathon entry)
 
-> Built October 1, 2026 (9:15 AM PT) – November 12, 2026 (12:00 PM PT) for the PayPal AI Hackathon.
+> Built during October 1, 2026 (9:15 AM PT) – November 12, 2026 (12:00 PM PT) for the PayPal AI Hackathon.
 
 Vireo is a B2B procurement platform — Smart from Request to Payment — guided
 by **Chime**, its Workspace Agent. Chime prepares; people decide: it never
