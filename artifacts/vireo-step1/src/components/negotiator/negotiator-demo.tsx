@@ -218,9 +218,16 @@ export function NegotiatorDemoPage() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-8">
         <header className="mb-6">
-          <p className="text-sm font-semibold text-muted-foreground">
-            Vireo · Smart from Request to Payment
-          </p>
+          <div className="flex items-center gap-3">
+            <img
+              src={`${import.meta.env.BASE_URL}logo.svg`}
+              alt="Vireo"
+              className="h-10 w-auto"
+            />
+            <p className="text-sm font-semibold text-muted-foreground">
+              Vireo · Smart from Request to Payment
+            </p>
+          </div>
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <h1 className="font-sans text-2xl font-bold">Chime Negotiator</h1>
             <Badge variant="destructive">DEMO ONLY</Badge>
@@ -241,10 +248,10 @@ export function NegotiatorDemoPage() {
               state={presence.cue}
               animate={presence.animate}
               speaking={presence.speaking}
-              className="size-16"
+              className="size-24"
             />
             <div>
-              <p className="font-sans text-base font-bold">Chime</p>
+              <p className="font-sans text-lg font-bold">Chime</p>
               <p className="text-sm text-muted-foreground">
                 Vireo&apos;s Workspace Agent — {presence.caption}
               </p>
