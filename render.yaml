@@ -1,0 +1,49 @@
+# Render blueprint — Chime Negotiator (PayPal AI Hackathon).
+#
+# Deploys two free-tier services from this repo:
+#   1. vireo-chime-negotiator-api  (Node web service: Express API)
+#   2. vireo-chime-negotiator-demo (static site: Vite demo app)
+#
+# Secrets are NEVER in this file: every sync:false var prompts for a value
+# in the Render dashboard on first deploy. Paste values there, never in chat.
+# If Render renames the API service (URL differs), update VITE_NEGOTIATOR_API
+# on the static service and redeploy it (see docs/hackathon/RENDER.md).
+
+services:
+  - type: web
+    name: vireo-chime-negotiator-api
+    runtime: node
+    plan: free
+    buildCommand: npm install -g pnpm@12.18.0 && pnpm install && pnpm --filter @workspace/api-server run build
+    startCommand: node --enable-source-maps artifacts/api-server/dist/index.mjs
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: META_MODEL_API_KEY
+        sync: false
+
+  - type: web
+    name: vireo-chime-negotiator-demo
+    runtime: static
+    buildCommand: npm install -g pnpm@12.18.0 && pnpm install && pnpm --filter @workspace/vireo-step1 run build
+    staticPublishPath: artifacts/vireo-step1/dist/public
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: PORT
+        value: "5173"
+      - key: BASE_PATH
+        value: /
+      - key: VITE_NEGOTIATOR_API
+        value: https://vireo-chime-negotiator-api.onrender.com
