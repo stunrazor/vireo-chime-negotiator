@@ -18,6 +18,11 @@ guardrails, a human approves, and PayPal Sandbox settles via
 authorize-then-capture with webhook reconciliation. No real money moves
 (Sandbox only); all demo data is synthetic.
 
+**Live demo (no install):**
+`https://vireo-chime-negotiator.onrender.com/negotiator-demo`
+(API: `https://vireo-chime-negotiator-api.onrender.com` — open it first to
+wake the free tier, then load the demo.)
+
 **Run it yourself (10–15 min, free tiers only):**
 
 1. Prereqs: Node 24+ (verified on 26), pnpm, Git. Windows needs Git for
