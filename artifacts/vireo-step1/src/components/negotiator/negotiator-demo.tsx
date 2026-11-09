@@ -31,6 +31,7 @@ import {
   type DemoSession,
   type DemoSupplier,
 } from "@/lib/negotiator-api";
+import { ChimeOrb, type ChimeWorkspaceCue } from "./chime-orb";
 
 type Phase =
   | "setup"
@@ -62,7 +63,7 @@ const BUSY_PHASES: Phase[] = ["negotiating", "approving", "authorizing", "captur
 function StageStatus({ phase }: { phase: Phase }) {
   const busy = BUSY_PHASES.includes(phase);
   return (
-    <span className="font-mono font-semibold text-foreground">
+    <span className="font-sans text-2xl font-bold text-foreground">
       {phaseLabel[phase]}
       {busy && (
         <>
@@ -73,6 +74,22 @@ function StageStatus({ phase }: { phase: Phase }) {
     </span>
   );
 }
+
+const CHIME_PRESENCE: Record<
+  Phase,
+  { cue: ChimeWorkspaceCue; animate: boolean; speaking: boolean; caption: string }
+> = {
+  setup: { cue: "monitoring", animate: false, speaking: false, caption: "Set your limits, then start." },
+  negotiating: { cue: "monitoring", animate: true, speaking: true, caption: "Haggling inside your limits." },
+  deal: { cue: "review", animate: false, speaking: false, caption: "Deal ready — your call." },
+  "no-deal": { cue: "blocker", animate: false, speaking: false, caption: "No deal inside your limits." },
+  approving: { cue: "monitoring", animate: true, speaking: false, caption: "Creating your PayPal order." },
+  approved: { cue: "review", animate: false, speaking: false, caption: "Order created — approve it in PayPal." },
+  authorizing: { cue: "monitoring", animate: true, speaking: false, caption: "Holding funds with PayPal." },
+  authorized: { cue: "review", animate: false, speaking: false, caption: "Funds held — capture on receipt." },
+  capturing: { cue: "monitoring", animate: true, speaking: false, caption: "Capturing on receipt." },
+  settled: { cue: "monitoring", animate: false, speaking: false, caption: "Settled and recorded." },
+};
 
 export function NegotiatorDemoPage() {
   const [suppliers, setSuppliers] = useState<DemoSupplier[]>([]);
@@ -195,6 +212,8 @@ export function NegotiatorDemoPage() {
     setPhase("setup");
   }
 
+  const presence = CHIME_PRESENCE[phase];
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-8">
@@ -217,6 +236,20 @@ export function NegotiatorDemoPage() {
             The human&apos;s Approve click is the payment-initiation event — no
             approval, no PayPal call.
           </p>
+          <div className="mt-4 flex items-center gap-4 rounded-xl border border-border bg-card p-4">
+            <ChimeOrb
+              state={presence.cue}
+              animate={presence.animate}
+              speaking={presence.speaking}
+              className="size-16"
+            />
+            <div>
+              <p className="font-sans text-base font-bold">Chime</p>
+              <p className="text-sm text-muted-foreground">
+                Vireo&apos;s Workspace Agent — {presence.caption}
+              </p>
+            </div>
+          </div>
           <p className="mt-3 flex items-center gap-2 text-sm">
             <span className="font-semibold text-muted-foreground">Current stage:</span>
             <StageStatus phase={phase} />
