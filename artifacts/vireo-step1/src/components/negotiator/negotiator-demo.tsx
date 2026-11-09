@@ -258,7 +258,7 @@ export function NegotiatorDemoPage() {
             <div>
               <p className="font-sans text-lg font-bold">Chime</p>
               <p className="text-sm text-muted-foreground">
-                Vireo&apos;s Workspace Agent — {presence.caption}
+                Vireo&apos;s Workspace Agent
               </p>
             </div>
           </div>
