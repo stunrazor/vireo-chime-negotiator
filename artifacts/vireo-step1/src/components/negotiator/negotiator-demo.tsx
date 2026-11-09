@@ -248,7 +248,7 @@ export function NegotiatorDemoPage() {
               state={presence.cue}
               animate={presence.animate}
               speaking={presence.speaking}
-              className="size-24"
+              className="size-32"
             />
             <div>
               <p className="font-sans text-lg font-bold">Chime</p>
