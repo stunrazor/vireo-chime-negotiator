@@ -73,6 +73,15 @@ export async function createAuthorizeOrder(
     },
     body: JSON.stringify({
       intent: "AUTHORIZE",
+      application_context: {
+        // Demo collects no shipping address: skip PayPal's address step, which
+        // stalls Sandbox buyer approval on address-less physical-goods orders.
+        shipping_preference: "NO_SHIPPING",
+        user_action: "CONTINUE",
+        brand_name: "Vireo Chime Demo",
+        return_url: "https://vireo-chime-negotiator.onrender.com/negotiator-demo",
+        cancel_url: "https://vireo-chime-negotiator.onrender.com/negotiator-demo",
+      },
       purchase_units: [
         {
           invoice_id: args.invoiceRef,
