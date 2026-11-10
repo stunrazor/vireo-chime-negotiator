@@ -21,10 +21,10 @@ authorize-then-capture with webhook reconciliation. No real money moves
 **Live demo (no install):**
 `https://vireo-chime-negotiator.onrender.com/negotiator-demo`
 
-> IMPORTANT: OPEN THE API FIRST TO WAKE IT UP —
-> `https://vireo-chime-negotiator-api.onrender.com` — WAIT FOR IT TO
-> RESPOND, THEN LOAD THE DEMO. THE FREE TIER SLEEPS WHEN IDLE AND THE
-> DEMO FAILS UNTIL THE API IS AWAKE.
+**IMPORTANT: OPEN THE API FIRST TO WAKE IT UP —
+`https://vireo-chime-negotiator-api.onrender.com` — WAIT FOR IT TO
+RESPOND, THEN LOAD THE DEMO. THE FREE TIER SLEEPS WHEN IDLE AND THE
+DEMO FAILS UNTIL THE API IS AWAKE.**
 
 **Judges — try the money flow (Sandbox buyer login included):**
 
