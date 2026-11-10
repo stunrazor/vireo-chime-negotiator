@@ -887,3 +887,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 @media (prefers-reduced-motion: reduce) {
   .chime-stage-dots::after { animation: none; content: "..."; }
 }
+
+/* Chime Negotiator demo: hand cursor over anything clickable. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href] {
+  cursor: pointer;
+}
