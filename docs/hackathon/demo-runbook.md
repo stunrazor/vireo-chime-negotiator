@@ -5,9 +5,12 @@ production data, no Main writes at any step.
 
 ## Judges quick-try (live demo, no install)
 
-1. Open the API root first to wake the free tier:
-   `https://vireo-chime-negotiator-api.onrender.com`, then the demo:
+1. IMPORTANT: OPEN THE API FIRST TO WAKE IT UP:
+   `https://vireo-chime-negotiator-api.onrender.com` — WAIT FOR IT TO
+   RESPOND, THEN OPEN THE DEMO:
    `https://vireo-chime-negotiator.onrender.com/negotiator-demo`.
+   THE FREE TIER SLEEPS WHEN IDLE AND THE DEMO FAILS UNTIL THE API IS
+   AWAKE.
 2. Start negotiation → Approve with any name → open the Sandbox approval
    link → log in as the buyer:
    email `sb-0f3yu53823617@personal.example.com`, password `s.RF"I44`
