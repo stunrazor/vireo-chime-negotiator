@@ -46,6 +46,7 @@ DEMO FAILS UNTIL THE API IS AWAKE.**
 - Prefer API tools? Import `docs/hackathon/chime-negotiator.postman_collection.json`
   into Postman and run the requests top to bottom. The settled ledger is
   also visible in-demo as an AG Grid — no Supabase access needed.
+- Full click-by-click walkthrough: `docs/hackathon/user-flow.md`.
 
 **Run it yourself (10–15 min, free tiers only):**
 
@@ -116,7 +117,8 @@ lib/db, lib/api-zod,       Shared TS packages the API/app need to build
 lib/api-client-react
 supabase/migrations/       The ONE migration: staging ledger tables + RPCs
 docs/hackathon/            Story, runbook, video script, checklists, criteria,
-                           Postman collection (sponsor) for the API
+                           Postman collection (sponsor) for the API,
+                           user-flow.md end-user walkthrough
 ```
 
 Everything here exists to run the demo above. The wider Vireo product
