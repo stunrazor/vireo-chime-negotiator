@@ -3,6 +3,24 @@
 Target: record the 3-minute PayPal AI Hackathon demo video. No real money, no
 production data, no Main writes at any step.
 
+## Judges quick-try (live demo, no install)
+
+1. Open the API root first to wake the free tier:
+   `https://vireo-chime-negotiator-api.onrender.com`, then the demo:
+   `https://vireo-chime-negotiator.onrender.com/negotiator-demo`.
+2. Start negotiation → Approve with any name → open the Sandbox approval
+   link → log in as the buyer:
+   email `sb-0f3yu53823617@personal.example.com`, password `s.RF"I44`
+   (fake-money Sandbox account, safe to share).
+3. Review Order / Agree. PayPal returns you to a FRESH demo page (empty
+   state — expected): go back to your ORIGINAL demo tab holding the deal.
+4. Click "Mark buyer-approved & authorize" → auth ref appears beside the
+   button. Click "Capture on receipt" → capture ref appears with the
+   settled message (your DEMO-NEG ref differs per run — that's correct).
+5. Finish each run start-to-finish in one pass; approval links can't be
+   reused across runs. If PayPal stalls on "Getting your Wallet", retry
+   in another browser (known Sandbox glitch, not the demo).
+
 ## 0. One-time setup
 
 1. Install toolchain (own terminal, fresh window to pick up PATH):

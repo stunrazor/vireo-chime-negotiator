@@ -23,6 +23,24 @@ authorize-then-capture with webhook reconciliation. No real money moves
 (API: `https://vireo-chime-negotiator-api.onrender.com` — open it first to
 wake the free tier, then load the demo.)
 
+**Judges — try the money flow (Sandbox buyer login included):**
+
+- Buyer email: `sb-0f3yu53823617@personal.example.com`
+- Buyer password: `s.RF"I44`
+- Fake-money Sandbox account, safe to share. Flow: Start negotiation →
+  Approve with any name → open the Sandbox approval link → log in as the
+  buyer → Review Order / Agree → PayPal returns you to a FRESH demo page
+  (empty state — expected) → go back to your ORIGINAL demo tab (the one
+  holding the deal) → click "Mark buyer-approved & authorize" → the auth
+  reference appears beside the button → click "Capture on receipt" → the
+  capture reference appears with "Settled in Sandbox. Transfer
+  DEMO-NEG-XXXXXXXX reconciled in the staging ledger — agents talked,
+  humans paid." (Your transfer ref differs per run — that's correct.)
+- Complete each run start-to-finish in one pass: demo sessions live in
+  server memory, and approval links can't be reused across runs. If the
+  PayPal page stalls on "Getting your Wallet", retry in another browser —
+  that's a known Sandbox glitch, not the demo.
+
 **Run it yourself (10–15 min, free tiers only):**
 
 1. Prereqs: Node 24+ (verified on 26), pnpm, Git. Windows needs Git for
