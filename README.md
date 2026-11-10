@@ -55,10 +55,11 @@ DEMO FAILS UNTIL THE API IS AWAKE.**
 2. `git clone <this-repo> && cd <repo> && pnpm install --allow-build esbuild
    --allow-build @clerk/shared --allow-build @swc/core --allow-build msw
    --allow-build unrs-resolver`
-3. Supabase: create a project, open its SQL Editor, run the whole file
-   `supabase/migrations/202611060001_vireo_negotiator_paypal.sql`, confirm the
-   two `vireo_negotiator_*` tables exist. (Use your own project — never
-   production data; demo writes are synthetic and DEMO-marked.)
+3. Supabase: create a project, open its SQL Editor, run both files in
+   `supabase/migrations/` in name order (ledger tables + write RPCs, then
+   the ledger-read RPC), confirm the two `vireo_negotiator_*` tables exist.
+   (Use your own project — never production data; demo writes are synthetic
+   and DEMO-marked.)
 4. PayPal: developer.paypal.com → Sandbox app (type Merchant) → note Client ID
    + Secret and a buyer test account.
 5. `cp artifacts/api-server/.env.example artifacts/api-server/.env` and fill
@@ -73,13 +74,11 @@ DEMO FAILS UNTIL THE API IS AWAKE.**
 8. Open `http://localhost:5173/negotiator-demo` → Start negotiation (defaults
    reach a deal in round 2: USD 6,899.20 total, USD 700.80 saved) →
    Approve with any name → open the Sandbox approval link as the buyer →
-   authorize → capture → settled. Ledger proof queries are in
-   `docs/hackathon/demo-runbook.md`.
+   authorize → capture → settled. The ledger grid in step 4 shows the
+   trail (proof queries also in `docs/hackathon/demo-runbook.md`).
 9. Optional AI check: with `META_MODEL_API_KEY` set (Meta Model API), the
-   transcript dialogue is voiced by Muse Spark, the award memo drafted by
-   Muse Wonder, and the mic transcribes the approver name via Muse Voice
-   Transcribe; without it, deterministic templates keep every number
-   identical. Bounds are always enforced by code, never by the model.
+   dialogue, memo, and mic go live (see "AI in this project"); without
+   it, deterministic templates keep every number identical.
 
 **Verify it quickly:** `pnpm --filter @workspace/api-server run typecheck`,
 `pnpm --filter @workspace/api-server run test:negotiator` (21 tests, no
@@ -115,7 +114,8 @@ artifacts/vireo-step1/     Demo app — the /negotiator-demo page judges use
 artifacts/vireo-design-system/  UI kit the demo page builds on (dependency)
 lib/db, lib/api-zod,       Shared TS packages the API/app need to build
 lib/api-client-react
-supabase/migrations/       The ONE migration: staging ledger tables + RPCs
+supabase/migrations/       Two migrations: ledger tables + write RPCs,
+                           then the ledger-read RPC (run in order)
 docs/hackathon/            Story, runbook, video script, checklists, criteria,
                            Postman collection (sponsor) for the API,
                            user-flow.md end-user walkthrough
@@ -128,7 +128,7 @@ Everything here exists to run the demo above. The wider Vireo product
 
 1. **Haggle (no money):** the deterministic engine negotiates price, delivery,
    and warranty inside the human's ceiling/date/warranty bounds — Muse Spark
-   voices the dialogue, code enforces the numbers. Walk-away on any breach.
+   voices the dialogue. Walk-away on any breach.
 2. **Approve (human click):** the payment-initiation event. It creates the
    PayPal Sandbox order (`AUTHORIZE` intent) and the staging transfer row
    together — the code cannot reach PayPal without a recorded approval.
@@ -152,6 +152,8 @@ $$\text{accept} \iff P \le P_{\max} \;\land\; D \le D_{\max} \;\land\; W \supset
 | `docs/hackathon/video-script.md` | 3-minute video shot plan |
 | `docs/hackathon/submission-checklist.md` | Submit-day checklist (deadline Nov 12, 2026) |
 | `docs/hackathon/judging-criteria.md` | Where we stand on the 5 criteria, with evidence |
+| `docs/hackathon/user-flow.md` | End-user walkthrough: click-by-click demo path |
+| `docs/hackathon/chime-negotiator.postman_collection.json` | Postman collection: full API flow, chained |
 | `docs/hackathon/PUBLISH.md` | How this public slice is rebuilt (repeatable) |
 
 ## Data safety
@@ -174,10 +176,11 @@ $$\text{accept} \iff P \le P_{\max} \;\land\; D \le D_{\max} \;\land\; W \supset
 | Primary | Best Use of Agentic Commerce | $5,000 | Buyer vs. supplier agents negotiating inside human-set bounds, settling on PayPal rails |
 | Stretch | Best Overall (1st/2nd/3rd) | $12k/$8k/$5k | Real B2B workflow + live Sandbox money, not a toy demo |
 | Secondary | Best Use of PayPal + AI | $5,000 | Meaningful use of both: AI negotiates, PayPal authorizes/captures + webhooks reconcile |
-| Secondary | Most Impactful | $5,000 | Procurement pain for mid-market teams; Net-0 supplier payouts |
+| Secondary | Most Impactful | $5,000 | Procurement pain for mid-market teams |
 | Secondary | Best Demo Delivery | $5,000 | Live haggle transcript → one-click Approve → Sandbox capture |
-| Sponsor | Best Use of APIMatic | 3 × $1,000 | Context Plugin gives the agent native PayPal API context |
-| Sponsor | Best Use of Channel3 | $1,500 | Live product catalog data for sourcing (no scraping) |
+
+Sponsor tools in use (not prize entries): Render (hosting), Postman (API
+collection), AG Grid (in-demo ledger viewer).
 
 Prototype lives on an isolated hackathon branch, staging Supabase project
 only, synthetic Demo data. Never Main. Submissions close **Nov 12, 2026**.
