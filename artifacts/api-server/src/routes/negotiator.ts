@@ -28,6 +28,7 @@ import {
 import { callStagingRpc, stagingConfigFromEnv } from "../lib/staging";
 import { rewriteDialogue, sparkConfigFromEnv } from "../lib/spark";
 import { generateMemo, wonderConfigFromEnv } from "../lib/wonder";
+import { decodeAudioB64, transcribeAudio, voiceConfigFromEnv } from "../lib/voice";
 
 const router: IRouter = Router();
 
@@ -123,6 +124,27 @@ router.get("/negotiator/suppliers", (_req, res) => {
       demo: true,
     })),
   });
+});
+
+// Voice transcription for the approver name (Muse Voice Transcribe).
+// JSON keeps the endpoint dependency-free (app-wide 10mb body cap covers
+// base64 clips). Only 400s for a missing/oversize/undecodable upload;
+// voice API failures return source "setup-required"/"unavailable" with
+// HTTP 200, like the other advisory model calls.
+router.post("/negotiator/transcribe", async (req, res) => {
+  const body = req.body as Record<string, unknown>;
+  const filename =
+    typeof body["filename"] === "string" && body["filename"].trim()
+      ? body["filename"].trim().slice(0, 100)
+      : "clip.wav";
+  let audio: Buffer;
+  try {
+    audio = decodeAudioB64(typeof body["audio_b64"] === "string" ? body["audio_b64"] : "");
+  } catch (error) {
+    res.status(400).json({ error: error instanceof Error ? error.message : "voice_audio_invalid" });
+    return;
+  }
+  res.json(await transcribeAudio(voiceConfigFromEnv(), audio, filename));
 });
 
 router.post("/negotiator/sessions", async (req, res) => {

@@ -112,6 +112,20 @@ export function captureSession(sessionId: string): Promise<{
   return request(`/negotiator/sessions/${sessionId}/capture`, { method: "POST" });
 }
 
+export type VoiceResult = {
+  source: "muse-voice-transcribe" | "setup-required" | "unavailable";
+  model: string;
+  text: string | null;
+  detail?: string;
+};
+
+export function transcribeVoice(audioB64: string, filename: string): Promise<VoiceResult> {
+  return request("/negotiator/transcribe", {
+    method: "POST",
+    body: JSON.stringify({ audio_b64: audioB64, filename }),
+  });
+}
+
 export function minorToDecimal(amountMinor: number): string {
   return (amountMinor / 100).toFixed(2);
 }

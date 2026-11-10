@@ -32,6 +32,7 @@ import {
   type DemoSupplier,
 } from "@/lib/negotiator-api";
 import { ChimeOrb, type ChimeWorkspaceCue } from "./chime-orb";
+import { MicButton } from "./mic-button";
 
 type Phase =
   | "setup"
@@ -102,6 +103,7 @@ export function NegotiatorDemoPage() {
   const [warranty, setWarranty] = useState("12");
   const [rounds, setRounds] = useState("3");
   const [approver, setApprover] = useState("");
+  const [voiceStatus, setVoiceStatus] = useState<string | null>(null);
   const [session, setSession] = useState<DemoSession | null>(null);
   const [approval, setApproval] = useState<ApprovalResult | null>(null);
   const [authorizationId, setAuthorizationId] = useState<string | null>(null);
@@ -448,7 +450,7 @@ export function NegotiatorDemoPage() {
                 {!approval ? (
                   <div className="grid gap-2 sm:max-w-sm">
                     <Label htmlFor="neg-approver">Approver name</Label>
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
                       <Input
                         id="neg-approver"
                         placeholder="e.g. Maria Santos"
@@ -456,10 +458,23 @@ export function NegotiatorDemoPage() {
                         onChange={(event) => setApprover(event.target.value)}
                         disabled={busy}
                       />
+                      <MicButton
+                        disabled={busy}
+                        onTranscript={setApprover}
+                        onStatus={setVoiceStatus}
+                      />
                       <Button onClick={onApprove} disabled={busy}>
                         Approve <ArrowRight className="h-4 w-4" />
                       </Button>
                     </div>
+                    {voiceStatus ? (
+                      <p className="text-xs text-muted-foreground">{voiceStatus}</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        Tip: click the mic, say the name, click again — Muse Voice
+                        Transcribe fills the field.
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <dl className="grid gap-2 text-sm">

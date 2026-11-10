@@ -8,7 +8,7 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:negotiator": "node --test src/lib/negotiator.test.ts src/lib/spark.test.ts src/lib/wonder.test.ts"
+    "test:negotiator": "node --test src/lib/negotiator.test.ts src/lib/spark.test.ts src/lib/wonder.test.ts src/lib/voice.test.ts"
   },
   "dependencies": {
     "@clerk/express": "^2.1.74",
