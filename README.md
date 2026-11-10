@@ -43,6 +43,9 @@ DEMO FAILS UNTIL THE API IS AWAKE.**
   server memory, and approval links can't be reused across runs. If the
   PayPal page stalls on "Getting your Wallet", retry in another browser —
   that's a known Sandbox glitch, not the demo.
+- Prefer API tools? Import `docs/hackathon/chime-negotiator.postman_collection.json`
+  into Postman and run the requests top to bottom. The settled ledger is
+  also visible in-demo as an AG Grid — no Supabase access needed.
 
 **Run it yourself (10–15 min, free tiers only):**
 
@@ -72,27 +75,48 @@ DEMO FAILS UNTIL THE API IS AWAKE.**
    authorize → capture → settled. Ledger proof queries are in
    `docs/hackathon/demo-runbook.md`.
 9. Optional AI check: with `META_MODEL_API_KEY` set (Meta Model API), the
-   transcript dialogue is voiced by Muse Spark and the award memo drafted by
-   Muse Wonder; without it, deterministic templates keep every number
+   transcript dialogue is voiced by Muse Spark, the award memo drafted by
+   Muse Wonder, and the mic transcribes the approver name via Muse Voice
+   Transcribe; without it, deterministic templates keep every number
    identical. Bounds are always enforced by code, never by the model.
 
 **Verify it quickly:** `pnpm --filter @workspace/api-server run typecheck`,
-`pnpm --filter @workspace/api-server run test:negotiator` (16 tests, no
+`pnpm --filter @workspace/api-server run test:negotiator` (21 tests, no
 network), `pnpm --filter @workspace/vireo-step1 run typecheck`.
 Troubleshooting: `503 negotiator_not_configured` = `.env` missing/unread;
 RPC `404` = migration applied to a different project than `.env` points at.
+
+## AI in this project
+
+Three Meta models, each inside the demo flow — and each bounded by code:
+
+- **Muse Spark** (`muse-spark-1.3`) voices the haggle transcript. It rewrites
+  lines only; prices, rounds, delivery, warranty, and the accept/walk-away
+  outcome stay deterministic (`artifacts/api-server/src/lib/spark.ts`).
+- **Muse Wonder** drafts the award memo shown before approval. Key figures
+  must echo the deal verbatim or the memo falls back to a template
+  (`artifacts/api-server/src/lib/wonder.ts`).
+- **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`) turns the spoken
+  approver name into text through the push-to-speak mic. Speech becomes
+  text only — the human still reviews the name and clicks Approve
+  (`artifacts/api-server/src/lib/voice.ts`).
+
+No key, no network, or a malformed reply → deterministic templates take
+over, and the session labels which source produced every word. Bounds are
+always enforced by code, never by the model.
 
 ## What's in this repo
 
 ```text
 artifacts/api-server/      Express API: negotiator engine, PayPal adapter,
-                           Muse Spark/Wonder clients, staging client
+                           Muse Spark/Wonder/Voice clients, staging client
 artifacts/vireo-step1/     Demo app — the /negotiator-demo page judges use
 artifacts/vireo-design-system/  UI kit the demo page builds on (dependency)
 lib/db, lib/api-zod,       Shared TS packages the API/app need to build
 lib/api-client-react
 supabase/migrations/       The ONE migration: staging ledger tables + RPCs
-docs/hackathon/            Story, runbook, video script, checklists, criteria
+docs/hackathon/            Story, runbook, video script, checklists, criteria,
+                           Postman collection (sponsor) for the API
 ```
 
 Everything here exists to run the demo above. The wider Vireo product

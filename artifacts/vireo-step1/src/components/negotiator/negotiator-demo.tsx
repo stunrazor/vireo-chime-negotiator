@@ -32,6 +32,7 @@ import {
   type DemoSupplier,
 } from "@/lib/negotiator-api";
 import { ChimeOrb, type ChimeWorkspaceCue } from "./chime-orb";
+import { LedgerGrid } from "./ledger-grid";
 import { MicButton } from "./mic-button";
 
 type Phase =
@@ -544,6 +545,8 @@ export function NegotiatorDemoPage() {
                     staging ledger — agents talked, humans paid.
                   </p>
                 )}
+                <Separator className="my-1" />
+                <LedgerGrid demoRef={approval.demoRef} />
               </CardContent>
             </Card>
           )}

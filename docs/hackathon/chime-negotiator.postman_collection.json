@@ -1,0 +1,137 @@
+{
+  "info": {
+    "name": "Vireo Chime Negotiator (PayPal AI Hackathon)",
+    "description": "Run the demo money flow without the UI: suppliers → start negotiation → approve (payment initiation) → buyer approval in PayPal Sandbox → authorize → capture → settled. Then read the staging ledger. Base URL defaults to the live Render API; point it at http://localhost:5000 for local runs. Run requests top to bottom: test scripts carry the session id and demo ref forward.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://vireo-chime-negotiator-api.onrender.com",
+      "description": "Live API. Wake it first (open / in a browser), or use http://localhost:5000 locally."
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "description": "Set automatically by 'Start negotiation'."
+    },
+    {
+      "key": "demoRef",
+      "value": "",
+      "description": "Set automatically by 'Approve'. Used by 'Ledger'."
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/healthz"
+      }
+    },
+    {
+      "name": "Demo suppliers (synthetic)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/negotiator/suppliers"
+      }
+    },
+    {
+      "name": "Start negotiation",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/negotiator/sessions",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"item\": \"tablet\",\n  \"qty\": 8,\n  \"supplierId\": \"demo-alpha\",\n  \"guardrails\": {\n    \"maxUnitPriceMinor\": 90000,\n    \"currency\": \"USD\",\n    \"latestDelivery\": \"2026-11-20\",\n    \"minWarrantyMonths\": 12,\n    \"maxRounds\": 3\n  }\n}",
+          "options": { "raw": { "language": "json" } }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('sessionId', body.session.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Approve (payment initiation)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/negotiator/sessions/{{sessionId}}/approve",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"approvedBy\": \"Postman Judge\"\n}",
+          "options": { "raw": { "language": "json" } }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('demoRef', body.demoRef);",
+              "console.log('Open this as the Sandbox buyer, then run Authorize: ' + body.approveUrl);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buyer approval (do in browser)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/",
+        "description": "Not an API call: open the approveUrl from the previous step in a browser, log in with the Sandbox buyer account (sb-0f3yu53823617@personal.example.com), click Review Order / Agree, then come back and run Authorize. This placeholder keeps the order visible in the runner."
+      }
+    },
+    {
+      "name": "Authorize",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/negotiator/sessions/{{sessionId}}/authorize"
+      }
+    },
+    {
+      "name": "Capture on receipt",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/negotiator/sessions/{{sessionId}}/capture"
+      }
+    },
+    {
+      "name": "Ledger (staging, read-only)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/negotiator/ledger?demo_ref={{demoRef}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "negotiator", "ledger"],
+          "query": [{ "key": "demo_ref", "value": "{{demoRef}}" }]
+        }
+      }
+    },
+    {
+      "name": "Transcribe approver name (voice)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/negotiator/transcribe",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"audio_b64\": \"PASTE_BASE64_16KHZ_MONO_WAV_HERE\",\n  \"filename\": \"approver.wav\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "description": "Paste a base64 16 kHz mono WAV clip. Without META_MODEL_API_KEY on the server the reply is source setup-required with no invented text."
+      }
+    }
+  ]
+}

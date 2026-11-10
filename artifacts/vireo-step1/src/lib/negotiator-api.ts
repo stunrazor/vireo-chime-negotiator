@@ -126,6 +126,47 @@ export function transcribeVoice(audioB64: string, filename: string): Promise<Voi
   });
 }
 
+export type LedgerTransfer = {
+  id: string;
+  demo_ref: string;
+  provider_code: string;
+  provider_payment_id: string;
+  paypal_order_id: string;
+  amount_minor: number;
+  currency_code: string;
+  status: string;
+  approved_by_label: string;
+  approved_at: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type LedgerEvent = {
+  id: string;
+  transfer_id: string;
+  provider_code: string;
+  provider_event_id: string;
+  provider_payment_id: string;
+  status: string;
+  currency_code: string;
+  amount_minor: number;
+  occurred_at: string;
+  payload_sha256: string;
+  received_at: string;
+};
+
+export type LedgerResult = {
+  synthetic: boolean;
+  staging: boolean;
+  demoRef: string;
+  transfer: LedgerTransfer | null;
+  events: LedgerEvent[];
+};
+
+export function getLedger(demoRef: string): Promise<LedgerResult> {
+  return request(`/negotiator/ledger?demo_ref=${encodeURIComponent(demoRef)}`);
+}
+
 export function minorToDecimal(amountMinor: number): string {
   return (amountMinor / 100).toFixed(2);
 }

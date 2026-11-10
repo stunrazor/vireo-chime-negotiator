@@ -950,6 +950,12 @@ importers:
       '@workspace/vireo-design-system':
         specifier: workspace:*
         version: link:../vireo-design-system
+      ag-grid-community:
+        specifier: ^36.3.0
+        version: 36.3.0
+      ag-grid-react:
+        specifier: ^36.3.0
+        version: 36.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -2498,6 +2504,21 @@ packages:
     resolution: {integrity: sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  ag-charts-types@14.3.0:
+    resolution: {integrity: sha512-6VtzUYBKN5mFY24/Eye3RUn1AAq7s+/B4hEu83ZOK/Pjqx26tHq2MoxiXlBE8F7oQO0VpjV5rZZaw6wxSpMNJg==}
+
+  ag-grid-community@36.3.0:
+    resolution: {integrity: sha512-0JRaIwE82TuOcx+upA3OnTyhDAIUDqrMxLoBib6yVON0SyfICdpOnwD4QdiT0A1lgrC8SkzLBFRst73bTREF6Q==}
+
+  ag-grid-react@36.3.0:
+    resolution: {integrity: sha512-Ttpb5J7b3oun8AdzTrLnXd5iMyh/G3R1esdG3nXnrfPC4kzFsM3sD0/h/wATE3dw7MH1oEKERa7xvQ+8QLuk1A==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  ag-stack@36.3.0:
+    resolution: {integrity: sha512-KbX/b6cM0GIJ4cz6W3jk8YoDG/XpqOC4WurYl8CDuQtER2d4rihjPI4tOLN4LqS0yfVspZ31ED1273kfG+6m0w==}
 
   ajv-draft-04@1.0.0:
     resolution: {integrity: sha512-mv00Te6nmYbRp5DCwclxtt7yV/joXJPGS7nM+97GdxvuttCOfgI3K4U25zboyeX0O+myI8ERluxQe5wljMmVIw==}
@@ -5623,6 +5644,22 @@ snapshots:
       negotiator: 1.1.0
 
   acorn@8.18.0: {}
+
+  ag-charts-types@14.3.0: {}
+
+  ag-grid-community@36.3.0:
+    dependencies:
+      ag-charts-types: 14.3.0
+      ag-stack: 36.3.0
+
+  ag-grid-react@36.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      ag-grid-community: 36.3.0
+      prop-types: 15.8.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  ag-stack@36.3.0: {}
 
   ajv-draft-04@1.0.0(ajv@8.20.0):
     optionalDependencies:

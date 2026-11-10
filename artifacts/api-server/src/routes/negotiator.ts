@@ -147,6 +147,33 @@ router.post("/negotiator/transcribe", async (req, res) => {
   res.json(await transcribeAudio(voiceConfigFromEnv(), audio, filename));
 });
 
+// Read-only staging ledger for one DEMO run (AG Grid viewer). Reads go
+// through the security-definer vireo_read_negotiator_ledger RPC — the only
+// read path; tables stay revoked. Only DEMO-marked refs are accepted.
+router.get("/negotiator/ledger", async (req, res) => {
+  const demoRef = typeof req.query["demo_ref"] === "string" ? req.query["demo_ref"].trim() : "";
+  if (!/^DEMO-NEG-[0-9A-Za-z-]{1,60}$/.test(demoRef)) {
+    res.status(400).json({ error: "invalid_demo_ref" });
+    return;
+  }
+  const staging = stagingConfigFromEnv();
+  if (!staging) {
+    res.status(503).json({ error: "negotiator_not_configured" });
+    return;
+  }
+  try {
+    const ledger = await callStagingRpc<Record<string, unknown>>(staging, "vireo_read_negotiator_ledger", {
+      p_demo_ref: demoRef,
+    });
+    res.json({ synthetic: true, staging: true, demoRef, ...ledger });
+  } catch (error) {
+    res.status(502).json({
+      error: "ledger_failed",
+      detail: error instanceof Error ? error.message : "unknown",
+    });
+  }
+});
+
 router.post("/negotiator/sessions", async (req, res) => {
   const body = req.body as Record<string, unknown>;
   const item = typeof body["item"] === "string" ? body["item"].trim() : "";
